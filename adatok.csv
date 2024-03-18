@@ -1,10 +1,10 @@
-name;id_store;shelf;row;quantity;min_quantity;price
-Alapozó;1;A1;sor1;20;5;1500
-Szempillaspirál;2;B2;sor2;15;3;1200
-Rúzs;3;C3;sor3;25;8;800
-Szemhéjpúder;2;A4;sor1;18;4;1000
-Kompakt púder;1;B1;sor2;22;6;1800
-Kontúr;1;C3;sor4;17;4;2000
-Highlighter;2;A2;sor1;14;3;1500
-Szemöldökceruza;3;B2;sor2;16;4;700
-Szemhéjtus;3;A3;sor1;12;2;1300
+name;id_store;id_shelf;id_row;price;quantity;min_quantity
+Foundation;1;A1;sor1;1500;20;5
+Mascara;2;B2;sor2;1200;15;3
+Lipstick;3;C3;sor3;800;25;8
+Eyeshadow;2;A4;sor1;1000;18;4
+Compact powder;1;B1;sor2;1800;22;6
+Contour;1;C3;sor4;2000;17;4
+Highlighter;2;A2;sor1;1500;14;3
+Eyebrow pencil;3;B2;sor2;700;16;4
+Eyeliner;3;A3;sor1;1300;12;2
