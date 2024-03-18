@@ -22,16 +22,14 @@ class Raktar
     {
         $this->mysqli->query('CREATE TABLE IF NOT EXISTS tablerow(
             id INT PRIMARY KEY auto_increment,
-            name VARCHAR(255) NOT NULL,
-            id_store INT)');
+            name VARCHAR(255) NOT NULL)');
     }
 
     private function createTableShelf()
     {
         $this->mysqli->query('CREATE TABLE IF NOT EXISTS shelf(
             id INT PRIMARY KEY auto_increment,
-            name VARCHAR(255) NOT NULL,
-            id_tablerow INT)');
+            name VARCHAR(255) NOT NULL)');
     }
 
     private function createTableProducts()
@@ -39,10 +37,12 @@ class Raktar
         $this->mysqli->query('CREATE TABLE IF NOT EXISTS products(
             id INT PRIMARY KEY auto_increment,
             name VARCHAR(200) NOT NULL,
+            id_store INT,
             id_shelf INT,
-            min_qty INT,
+            id_row INT,
+            price INT,
             quantity INT,
-            price INT)');
+            min_qty INT)');
     }
 
     public function createTable()
@@ -51,5 +51,93 @@ class Raktar
         $this->createTableRow();
         $this->createTableShelf();
         $this->createTableProducts();
+    }
+
+    public function importStorageFromCsv($csvFile) 
+    {
+        $file = fopen($csvFile,'r');
+
+        if (!$file) {
+            die('Hiba! Nincs ilyen fájl!');
+        }
+
+        fgetcsv($file);
+        while (($data = fgetcsv($file, 100, ";")) !== false) 
+        {
+            $name = $data[0];
+            $address = $data[1];
+
+            $query = "INSERT INTO store (name, address) VALUES ('$name', '$address')";
+            $result = $this->mysqli->query($query);
+        }
+
+        fclose($file);
+    }
+
+    public function importShelfFromCsv($csvFile)
+    {
+        $file = fopen($csvFile,"r");
+
+        if (!$file) {
+            die("HIBA!");
+        }
+
+        fgetcsv($file);
+        while (($data = fgetcsv($file, 1000,';')) !== false)
+        {
+            $name = $data[0];
+
+            $query = "INSERT INTO shelf (name) VALUES ('$name')";
+            $result = $this->mysqli->query($query);
+        }
+
+        fclose($file);
+    }
+
+    public function importRowFromCsv($csvFile)
+    {
+        $file = fopen($csvFile,"r");
+
+        if (!$file)
+        {
+            die("HIBA!");
+        }
+
+        fgetcsv($file);
+        while (($data = fgetcsv($file,1000,";")) !== false)
+        {
+            $name = $data[0];
+
+            $query = "INSERT INTO tablerow (name) VALUES ('$name')";
+            $result = $this->mysqli->query($query);
+        }
+
+        fclose($file);
+    }
+
+    public function importDataFromCsv($csvFile) 
+    {
+        $file = fopen($csvFile,"w");
+
+        if (!$file)
+        {
+            die("HIBA!");
+        }
+
+        fgetcsv($file);
+        while (($data = fgetcsv($file,100,";")) !== false)
+        {
+            $name = $data[0];
+            $id_store = data[1];
+
+        }
+
+        fclose($file);
+    }
+
+
+    public function __destruct()
+    {
+        $this->mysqli->close();
     }
 }
