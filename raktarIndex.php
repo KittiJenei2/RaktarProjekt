@@ -3,7 +3,6 @@ session_start();
 
 require_once 'raktarTable.php';
 echo "<link rel='stylesheet' type='text/css' href='raktar.css'>";
-
 $dataBase = new Raktar();
 
 echo '<header>Makeup storage</header>';
@@ -48,7 +47,6 @@ if(isset($_POST['loadProducts']))
     $csvFile = 'adatok.csv';
     $dataBase->importProductsFromCsv($csvFile);
 }
-
 echo '<h1>Search for a product</h1></br>';
 echo '<form method = "post" action = "">
         <label for="itemName">The name of the product you want to find: </label>
@@ -74,14 +72,14 @@ if(isset($_POST['findLocation']))
 }
 
 echo '<form method="post" action="">
-        <button type="submit" name="listItems">Show products</button>
-        <button type="submit" name="hideProducts">Hide Products</button
-        </form>';
+        <button type="submit" name="listProducts">List Products</button>
+        <button type="submit" name="hideProducts">Hide Products</button>
+      </form>';
 
-if (isset($_POST['listItems'])) {
+if (isset($_POST['listProducts'])) {
     echo '<h2>Items in our storage: </h2>';
     $inventory = $dataBase->getProducts();
-    echo '<table>';
+    echo '<table id="productTable">';
     echo '<tr><th>Name</th><th>Store Name</th><th>Row Name</th><th>Shelf Name</th><th>Price</th><th>Quantity</th></tr>';
     foreach($inventory as $item)
     {
@@ -95,8 +93,8 @@ if (isset($_POST['listItems'])) {
         echo '</tr>';
     }
     echo '</table>';
-} elseif(isset($_POST['hideProducts'])) {
-    
+} elseif (isset($_POST['hideProducts'])) {
+    echo '';
 }
 
 $sale = 20;
