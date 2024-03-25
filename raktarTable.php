@@ -146,20 +146,20 @@ class Raktar
                 $store_row = $store_result->fetch_assoc();
                 $id_store = $store_row['id'];
                 
-                
+
                 $shelf_query = "SELECT id FROM shelf WHERE name = '$idshelf'";
                 $shelf_result = $this->mysqli->query($shelf_query);
                 $shelf_row = $shelf_result->fetch_assoc();
                 $id_shelf = $shelf_row['id'];
                 
-                
+
                 $row_query = "SELECT id FROM tablerow WHERE name = '$idrow'";
                 $row_result = $this->mysqli->query($row_query);
                 $row_row = $row_result->fetch_assoc();
                 $id_row = $row_row['id'];
                 
-                
-                
+
+
                 $query = "INSERT INTO products (name, id_store, id_shelf, id_row, price, quantity, min_qty) VALUES ('$name', '$id_store', '$id_shelf', '$id_row', '$price', '$quantity', '$min_qty')";
                 $result = $this->mysqli->query($query);
             }
@@ -170,7 +170,7 @@ class Raktar
 
     public function getProducts() 
     {
-        $query = "SELECT p.name, s.name AS store_name, r.name AS row_name, sh.name AS shelf_name, p.price, p.quantity FROM products p
+        $query = "SELECT p.id, p.name, s.name AS store_name, r.name AS row_name, sh.name AS shelf_name, p.price, p.quantity FROM products p
                     JOIN store s ON p.id_store = s.id
                     JOIN tablerow r ON p.id_row = r.id
                     JOIN shelf sh ON p.id_shelf = sh.id";
@@ -217,10 +217,42 @@ class Raktar
         return $lowStockItems;
     }
 
+    public function addNewItem($name, $id_store, $id_shelf, $id_row, $price, $quantity, $min_qty)
+    {
+        $query = "INSERT INTO products (name, id_store, id_shelf, id_row, price, quantity, min_qty) VALUES ('$name', '$id_store', '$id_shelf', '$id_row', '$price', '$quantity', '$min_qty')";
+        $result = $this->mysqli->query($query);
+
+        if($result)
+        {
+            return "New product succesfully added!";
+        } else {
+            return "Error adding new product";
+        }
+    }
+
+    public function editItem($productId, $editedName, $editedStore, $editedShelf, $editedRow, $editedPrice, $editedqty)
+    {
+        $query = "UPDATE products SET name = '$editedName', id_store = '$editedStore', id_shelf = '$editedShelf', id_row = '$editedRow', price = '$editedPrice', quantity = '$editedqty' WHERE id = $productId";
+        $result = $this->mysqli->query($query);
+
+        if ($result) {
+            return "Succesfully updated item!";
+        }
+
+    }
+
+    public function getItemByName($itemName) {
+        $query = "SELECT * FROM products WHERE name = '$itemName'";
+        $result = $this->mysqli->query($query);
+        return $result->fetch_assoc();
+    }
+
     public function __destruct()
     {
         $this->mysqli->close();
     }
+
+    
 
 }
 
