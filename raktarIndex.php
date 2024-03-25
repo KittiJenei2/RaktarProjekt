@@ -6,7 +6,7 @@ echo "<link rel='stylesheet' type='text/css' href='raktar.css'>";
 
 $dataBase = new Raktar();
 
-echo '<h1>Makeup storage</h1>';
+echo '<header>Makeup storage</header>';
 /*echo '<form method = "post" action="">
         <button type = "submit" id = "createTab" name = "createTab">Tables</button>
         </form>';
@@ -18,6 +18,7 @@ echo '<form method="post" action="">
         <button type = "submit" name="loadProducts">Products tábla</button>
         </form>';
 */
+
 
 if(isset($_POST['createTab']))
 {
@@ -48,6 +49,7 @@ if(isset($_POST['loadProducts']))
     $dataBase->importProductsFromCsv($csvFile);
 }
 
+echo '<h1>Search for a product</h1></br>';
 echo '<form method = "post" action = "">
         <label for="itemName">The name of the product you want to find: </label>
         <input type = "text" id = "itemName" name = "itemName" required>
@@ -71,26 +73,36 @@ if(isset($_POST['findLocation']))
     }
 }
 
-echo '<h2>Items in our storage: </h2>';
-$inventory = $dataBase->getProducts();
-echo '<table>';
-echo '<tr><th>Name</th><th>Store Name</th><th>Row Name</th><th>Shelf Name</th><th>Price</th><th>Quantity</th></tr>';
-foreach($inventory as $item)
-{
-    echo '<tr>';
-    echo '<td>' . $item['name'] . '</td>';
-    echo '<td>' . $item['store_name'] . '</td>';
-    echo '<td>' . $item['row_name'] . '</td>';
-    echo '<td>' . $item['shelf_name'] . '</td>';
-    echo '<td>'. $item['price'] . ' Ft</td>';
-    echo '<td>' . $item['quantity'] . '</td>';
-    echo '</tr>';
+echo '<form method="post" action="">
+        <button type="submit" name="listItems">Show products</button>
+        <button type="submit" name="hideProducts">Hide Products</button
+        </form>';
+
+if (isset($_POST['listItems'])) {
+    echo '<h2>Items in our storage: </h2>';
+    $inventory = $dataBase->getProducts();
+    echo '<table>';
+    echo '<tr><th>Name</th><th>Store Name</th><th>Row Name</th><th>Shelf Name</th><th>Price</th><th>Quantity</th></tr>';
+    foreach($inventory as $item)
+    {
+        echo '<tr>';
+        echo '<td>' . $item['name'] . '</td>';
+        echo '<td>' . $item['store_name'] . '</td>';
+        echo '<td>' . $item['row_name'] . '</td>';
+        echo '<td>' . $item['shelf_name'] . '</td>';
+        echo '<td>'. $item['price'] . ' Ft</td>';
+        echo '<td>' . $item['quantity'] . '</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+} elseif(isset($_POST['hideProducts'])) {
+    
 }
-echo '</table>';
 
 $sale = 20;
 $lowStockProducts = $dataBase->lowStockItems($sale);
 
+echo '<h2>ATTENTION! Almost out of stock items!</h2>';
 echo '<button onclick="showLowStockProducts()">Almost out of stock!</button>';
 echo '<script>
 function showLowStockProducts() {

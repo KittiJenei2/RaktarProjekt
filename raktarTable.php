@@ -136,27 +136,33 @@ class Raktar
             $quantity = $data[5];
             $min_qty = $data[6];
 
-            $store_query = "SELECT id FROM store WHERE id = '$idstore'";
-            $store_result = $this->mysqli->query($store_query);
-            $store_row = $store_result->fetch_assoc();
-            $id_store = $store_row['id'];
-            
+            $check_query = "SELECT COUNT(*) as count FROM products WHERE name = '$name'";
+            $check_result = $this->mysqli->query($check_query);
+            $check_row = $check_result->fetch_assoc();
 
-            $shelf_query = "SELECT id FROM shelf WHERE name = '$idshelf'";
-            $shelf_result = $this->mysqli->query($shelf_query);
-            $shelf_row = $shelf_result->fetch_assoc();
-            $id_shelf = $shelf_row['id'];
-            
-
-            $row_query = "SELECT id FROM tablerow WHERE name = '$idrow'";
-            $row_result = $this->mysqli->query($row_query);
-            $row_row = $row_result->fetch_assoc();
-            $id_row = $row_row['id'];
-            
-
-
-            $query = "INSERT INTO products (name, id_store, id_shelf, id_row, price, quantity, min_qty) VALUES ('$name', '$id_store', '$id_shelf', '$id_row', '$price', '$quantity', '$min_qty')";
-            $result = $this->mysqli->query($query);
+            if ($check_row['count'] == 0) {
+                $store_query = "SELECT id FROM store WHERE id = '$idstore'";
+                $store_result = $this->mysqli->query($store_query);
+                $store_row = $store_result->fetch_assoc();
+                $id_store = $store_row['id'];
+                
+                
+                $shelf_query = "SELECT id FROM shelf WHERE name = '$idshelf'";
+                $shelf_result = $this->mysqli->query($shelf_query);
+                $shelf_row = $shelf_result->fetch_assoc();
+                $id_shelf = $shelf_row['id'];
+                
+                
+                $row_query = "SELECT id FROM tablerow WHERE name = '$idrow'";
+                $row_result = $this->mysqli->query($row_query);
+                $row_row = $row_result->fetch_assoc();
+                $id_row = $row_row['id'];
+                
+                
+                
+                $query = "INSERT INTO products (name, id_store, id_shelf, id_row, price, quantity, min_qty) VALUES ('$name', '$id_store', '$id_shelf', '$id_row', '$price', '$quantity', '$min_qty')";
+                $result = $this->mysqli->query($query);
+            }
         }
 
         fclose($file);
