@@ -2,27 +2,37 @@
 session_start();
 
 require_once 'raktarTable.php';
+require_once 'Html.php';
 echo "<link rel='stylesheet' type='text/css' href='raktar.css'>";
 $dataBase = new Raktar();
 
-echo '<header>Makeup storage<br>
+echo '<header><h1>Makeup storage</h1><br>
         <form method = "post" action = "">
         <button type = "submit" id = "Search" name = "Search">Search</button>
         <button type = "submit" id = "newItem" name = "newItem">Add new item</button>
-        </header>';
-echo '<form method = "post" action="">
-        <button type = "submit" id = "createTab" name = "createTab">Tables</button>
-        </form>';
+        <button type="submit" name="listProducts">List Products</button>
+        <button type="submit" name="hideProducts">Hide Products</button>
+        <button onclick="showLowStockProducts()">Almost out of stock!</button>
+<script>
+function showLowStockProducts() {
+    event.preventDefault();
+    
+    var modal = document.getElementById("lowStockModal");
+    modal.style.display = "block";
+}
+</script>
+</header>';
 
-echo '<form method="post" action="">
+/*echo '<form method = "post" action="">
+        <button type = "submit" id = "createTab" name = "createTab">Tables</button>
+        </form>';*/
+
+/*echo '<form method="post" action="">
         <button type="submit" name="loadstorage">Storage tábla</button>
         <button type = "submit" name="loadShelves">Shelf tábla</button>
         <button type = "submit" name="loadRows">Rows tábla</button>
         <button type = "submit" name="loadProducts">Products tábla</button>
-        </form>';
-
-
-
+        </form>';*/
 
 if(isset($_POST['createTab']))
 {
@@ -62,28 +72,11 @@ echo '<form method = "post" action = "">
         </form>';
 }
 
-if(isset($_POST['newItem'])) {
-    echo '<div class = "box">
-    <h1>Fill in the boxes with the data of your item below: </h1>
-    <form method="post" action="">
-    <label for="newProductName">Name: </label>
-    <input type="text" id="newProductName" name="newProductName" required><br>
-    <label for="newProductStoreId">Store ID: </label>
-    <input type="text" id="newProductStoreId" name="newProductStoreId" required><br>
-    <label for="newProductShelfId">Shelf ID: </label>
-    <input type="text" id="newProductShelfId" name="newProductShelfId" required><br>
-    <label for="newProductRowId">Row ID: </label>
-    <input type="text" id="newProductRowId" name="newProductRowId" required><br>
-    <label for="newProductPrice">Price: </label>
-    <input type="text" id="newProductPrice" name="newProductPrice" required><br>
-    <label for="newProductQuantity">Quantity: </label>
-    <input type="text" id="newProductQuantity" name="newProductQuantity" required><br>
-    <label for="newProductMinQty">Min Quantity: </label>
-    <input type="text" id="newProductMinQty" name="newProductMinQty" required><br>
-    <button type="submit" name="addNewItem">Add New Product</button>
-    </form>
-    </div>';
+if(isset($_POST['newItem'])) 
+{
+    Html::newItem();
 }
+
 if(isset($_POST['addNewItem'])) {
     $name = $_POST['newProductName'];
     $storeId = $_POST['newProductStoreId'];
@@ -113,19 +106,12 @@ if(isset($_POST['findLocation']))
         echo '<p>' . $result . '</p>';
     }
 }
-
-echo '<form method="post" action="">
-        <button type="submit" name="listProducts">List Products</button>
-        <button type="submit" name="hideProducts">Hide Products</button>
-      </form>';
-
-
       if(isset($_POST['listProducts'])) {
         echo '<h2>Items in our storage: </h2>';
         $inventory = $dataBase->getProducts();
         echo '<table id="productTable">';
         echo '<tr><th>Name</th><th>Store Name</th><th>Row Name</th><th>Shelf Name
-    th><th>Price</th><th>Quantity</th><th>Action</th></tr>';
+    </th><th>Price</th><th>Quantity</th><th>Action</th><th> </th></tr>';
         foreach($inventory as $item) {
             echo '<tr>';
             echo '<td>' . $item['name'] . '</td>';
@@ -138,9 +124,15 @@ echo '<form method="post" action="">
                   <form method="post" action="">
                       <input type="hidden" name="itemName" value="' . $item['name'] . '">
                       <input type="hidden" name="itemId" value="' . $item['id'] . '">
-                      <button type="submit" name="editItem">Módosítás</button>
+                      <button type="submit" name="editItem">Edit</button>
                   </form>
               </td>';
+            echo '<td>
+                  <form method="post" action="">
+                    <input type="hidden" name="itemId" value="' . $item['id'] . '">
+                    <button type="submit" name="deleteItem">Delete</button>
+                  </form>
+                  </td>';
             echo '</tr>';
     }
       echo '</table>';
@@ -150,7 +142,7 @@ echo '<form method="post" action="">
 
 if(isset($_POST['editItem'])) {
     $itemName = $_POST['itemName'];
-    // Itt újra definiáljuk az $itemData változót
+
     $itemData = $dataBase->getItemByName($itemName);
 
     echo '<form method="post" action=""><input type="hidden" name="itemName" value="' . $itemName . '">';
@@ -179,26 +171,25 @@ if(isset($_POST['submitEdit'])) {
     $editedQty = $_POST['editProductQty'];
 
     $result = $dataBase->editItem($productId, $editedName, $editedStoreName, $editedShelf, $editedRow, $editedPrice, $editedQty);
-    echo "<p>$result</p>";
+    echo "<p>Item edited succesfully.</p>";
 }
+
+if(isset($_POST['deleteItem']))
+{
+    $itemId = $_POST['itemId'];
+    $result = $dataBase->deleteItem($itemId);
+    echo "<p>Item deleted succesfully..</p>";
+}
+
 $sale = 20;
 $lowStockProducts = $dataBase->lowStockItems($sale);
-
-echo '<h2>ATTENTION! Almost out of stock items!</h2>';
-echo '<button onclick="showLowStockProducts()">Almost out of stock!</button>';
-echo '<script>
-function showLowStockProducts() {
-    var modal = document.getElementById("lowStockModal");
-    modal.style.display = "block";
-}
-</script>';
 
 echo '<div id="lowStockModal" class="modal" style="display: none;">';
 echo '  <div class="modal-content">';
 echo '    <span class="close" onclick="document.getElementById(\'lowStockModal\').style.display = \'none\'">&times;</span>';
 if(!empty($lowStockProducts))
 {
-    echo '<h2>The following items are almost out of stock: </h2>';
+    echo '<h2>ATTENTION! Almost out of stock items!</h2>';
     foreach($lowStockProducts as $item)
     {
         echo '<p>' . $item['name'] . '(' . $item['quantity'] . ' left)</p>';

@@ -241,6 +241,17 @@ class Raktar
 
     }
 
+    public function deleteItem($itemId) 
+    {
+        $query = "DELETE FROM products WHERE id = $itemId";
+        $result = $this->mysqli->query($query);
+        if ($result) {
+            return "A termék sikeresen törölve lett az adatbázisból.";
+        } else {
+            return "Hiba történt a termék törlésekor.";
+        }
+    }
+
     public function getItemByName($itemName) {
         $query = "SELECT * FROM products WHERE name = '$itemName'";
         $result = $this->mysqli->query($query);

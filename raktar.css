@@ -56,6 +56,7 @@ body {
 }
 
 header {
+
     background-color: #5776FA;
     color: #fff;
     padding: 10px;
@@ -63,8 +64,8 @@ header {
 }
 
 button {
-    background-color: #007bff;
-    border: none;
+    background-color: #252f8a;
+    border-color: white;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
