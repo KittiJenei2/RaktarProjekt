@@ -262,8 +262,5 @@ class Raktar
     {
         $this->mysqli->close();
     }
-
-    
-
 }
 

@@ -3,6 +3,8 @@ session_start();
 
 require_once 'raktarTable.php';
 require_once 'Html.php';
+require_once 'vendor/autoload.php';
+
 echo "<link rel='stylesheet' type='text/css' href='raktar.css'>";
 $dataBase = new Raktar();
 
@@ -11,28 +13,25 @@ echo '<header><h1>Makeup storage</h1><br>
         <button type = "submit" id = "Search" name = "Search">Search</button>
         <button type = "submit" id = "newItem" name = "newItem">Add new item</button>
         <button type="submit" name="listProducts">List Products</button>
-        <button type="submit" name="hideProducts">Hide Products</button>
-        <button onclick="showLowStockProducts()">Almost out of stock!</button>
-<script>
-function showLowStockProducts() {
-    event.preventDefault();
+        <button type="submit" name="hideProducts">Hide Products</button>';
+echo '<script>
+        function showLowStockProducts(event) {
+        event.preventDefault();
     
-    var modal = document.getElementById("lowStockModal");
-    modal.style.display = "block";
-}
-</script>
-</header>';
+        var modal = document.getElementById("lowStockModal");
+        modal.style.display = "block";
+        }
+      </script>';
 
-/*echo '<form method = "post" action="">
-        <button type = "submit" id = "createTab" name = "createTab">Tables</button>
-        </form>';*/
+echo '<form method = "post" action = "download.php">
+        <button type="submit" name="pdf">PDF file</button>
+      </form>';
 
-/*echo '<form method="post" action="">
-        <button type="submit" name="loadstorage">Storage tábla</button>
-        <button type = "submit" name="loadShelves">Shelf tábla</button>
-        <button type = "submit" name="loadRows">Rows tábla</button>
-        <button type = "submit" name="loadProducts">Products tábla</button>
-        </form>';*/
+echo '<form method = "post" action = "email.php">
+        <button type="submit" name="email">Send E-mail</button>
+      </form>';
+
+echo '</header>';
 
 if(isset($_POST['createTab']))
 {
